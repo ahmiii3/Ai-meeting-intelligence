@@ -111,7 +111,7 @@ const login = async (req, res) => {
     }
 
     // Build token payload
-    const tokenPayload = { userId: user.id, email: user.email, role: user.role };
+    const tokenPayload = { userId: user.id, email: user.email };
 
     const accessToken = generateAccessToken(tokenPayload);
     const refreshTokenValue = generateRefreshToken({ userId: user.id });
@@ -178,8 +178,7 @@ const refreshToken = async (req, res) => {
     // Issue a new access token
     const newAccessToken = generateAccessToken({
       userId: user.id,
-      email: user.email,
-      role: user.role
+      email: user.email
     });
 
     return res.status(200).json({
