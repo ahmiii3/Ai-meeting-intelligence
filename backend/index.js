@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const sequelize = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
+const workspaceRoutes = require('./routes/workspaceRoutes');
 
 const app = express();
 
@@ -16,10 +17,19 @@ app.use(express.urlencoded({ extended: true }));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/auth', authRoutes);
+app.use('/api/workspaces', workspaceRoutes);
 
 // Health check
 app.get('/', (req, res) => {
-  res.json({ success: true, message: 'AI Meeting Intelligence API is running' });
+  res.json({ 
+    success: true, 
+    message: 'AI Meeting Intelligence API',
+    version: '1.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      workspaces: '/api/workspaces'
+    }
+  });
 });
 
 // ─── Global Error Handler ─────────────────────────────────────────────────────
@@ -42,6 +52,9 @@ const startServer = async () => {
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`📍 API Endpoints:`);
+      console.log(`   - Auth: http://localhost:${PORT}/api/auth`);
+      console.log(`   - Workspaces: http://localhost:${PORT}/api/workspaces`);
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);

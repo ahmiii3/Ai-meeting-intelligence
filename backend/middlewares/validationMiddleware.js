@@ -71,4 +71,39 @@ const validateLogin = (req, res, next) => {
   next();
 };
 
-module.exports = { validateSignup, validateLogin };
+/**
+ * Validates workspace operations
+ * Used for: POST /workspaces, PUT /workspaces/:id
+ */
+const validateWorkspace = (req, res, next) => {
+  const body = req.body || {};
+  const { name, description } = body;
+
+  // Name is required for create, optional for update
+  if (req.method === 'POST' && !name) {
+    return res.status(400).json({
+      success: false,
+      message: 'Workspace name is required'
+    });
+  }
+
+  // Validate name length if provided
+  if (name && (name.length < 2 || name.length > 100)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Workspace name must be between 2 and 100 characters'
+    });
+  }
+
+  // Validate description length if provided
+  if (description && description.length > 500) {
+    return res.status(400).json({
+      success: false,
+      message: 'Description cannot exceed 500 characters'
+    });
+  }
+
+  next();
+};
+
+module.exports = { validateSignup, validateLogin, validateWorkspace };
