@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "MERN Authentication Backend",
+  "description": "AI Meeting Intelligence Backend",
   "license": "ISC",
   "author": "",
   "type": "commonjs",
@@ -12,14 +12,18 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@deepgram/sdk": "^3.13.0",
+    "@google/generative-ai": "^0.21.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.2",
+    "openai": "^4.28.0",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.1"
+    "sequelize": "^6.37.1",
+    "socket.io": "^4.7.5"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
