@@ -4,7 +4,8 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const { 
   analyzeMeeting, 
   getMeetingSummary, 
-  getActionItems 
+  getActionItems,
+  checkDatabaseSaved
 } = require('../controllers/analysisController');
 
 /**
@@ -27,5 +28,12 @@ router.get('/meeting/:meetingId/summary', authMiddleware, getMeetingSummary);
  * Get detected action items, tasks, and decisions
  */
 router.get('/meeting/:meetingId/action-items', authMiddleware, getActionItems);
+
+/**
+ * GET /api/analysis/meeting/:meetingId/database-check
+ * Check what was actually saved to database for this meeting
+ * Debugging endpoint to verify saves
+ */
+router.get('/meeting/:meetingId/database-check', authMiddleware, checkDatabaseSaved);
 
 module.exports = router;

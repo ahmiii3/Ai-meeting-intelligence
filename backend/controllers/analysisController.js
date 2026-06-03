@@ -1,5 +1,7 @@
 const Transcript = require('../models/Transcript');
 const Meeting = require('../models/Meeting');
+const MeetingSummary = require('../models/MeetingSummary');
+const Task = require('../models/Task');
 const { analyzeTranscript, generateMeetingSummary, formatAnalysisResponse } = require('../services/meetingAnalysisService');
 
 /**
@@ -215,8 +217,69 @@ const getActionItems = async (req, res) => {
   }
 };
 
+/**
+ * GET /api/analysis/meeting/:meetingId/database-check
+ * Check what was saved to database for this meeting
+ */
+const checkDatabaseSaved = async (req, res) => {
+  try {
+    const { meetingId } = req.params;
+
+    console.log(`📊 Checking database for meeting: ${meetingId}`);
+
+    // Get summary
+    const summary = await MeetingSummary.findOne({
+      where: { meeting_id: meetingId }
+    });
+
+    // Get tasks
+    const tasks = await Task.findAll({
+      where: { meeting_id: meetingId }
+    });
+
+    // Get transcripts count
+    const transcriptCount = await Transcript.count({
+      where: { meeting_id: meetingId }
+    });
+
+    res.json({
+      success: true,
+      meetingId,
+      summary: summary ? {
+        id: summary.id,
+        executive_summary: summary.executive_summary,
+        detailed_summary: summary.detailed_summary,
+        key_decisions: summary.key_decisions,
+        next_steps: summary.next_steps,
+        generated_at: summary.generated_at,
+        generated_by: summary.generated_by
+      } : null,
+      tasks: tasks.map(t => ({
+        id: t.id,
+        description: t.description,
+        assignee: t.assignee,
+        priority: t.priority,
+        status: t.status,
+        created_at: t.createdAt
+      })),
+      transcriptCount,
+      hasSummary: !!summary,
+      taskCount: tasks.length,
+      totalTranscripts: transcriptCount,
+      checkedAt: new Date()
+    });
+  } catch (error) {
+    console.error('❌ Error checking database:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Database check failed'
+    });
+  }
+};
+
 module.exports = {
   analyzeMeeting,
   getMeetingSummary,
-  getActionItems
+  getActionItems,
+  checkDatabaseSaved
 };

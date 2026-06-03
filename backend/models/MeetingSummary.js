@@ -34,6 +34,11 @@ const MeetingSummary = sequelize.define(
       allowNull: true,
       comment: 'Key decisions made in meeting (JSON array format)'
     },
+    next_steps: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      comment: 'Next steps and action items (JSON array format)'
+    },
     risks_concerns: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -44,7 +49,7 @@ const MeetingSummary = sequelize.define(
       allowNull: true,
       defaultValue: 'detailed',
       validate: {
-        isIn: [['executive', 'detailed', 'bullet_points']]
+        isIn: [['executive', 'detailed', 'bullet_points', 'comprehensive']]
       },
       comment: 'Type of summary generated'
     },
